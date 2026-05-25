@@ -12,11 +12,6 @@
   .screen { display: none; }
   .screen.active { display: block; }
 
-  /* === HEADER WITH BACK BUTTON === */
-  .screen-header { display: flex; align-items: center; margin-bottom: 1.5rem; position: relative; }
-  .screen-header .back-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #2E2E32; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
-  .screen-header h2 { flex: 1; text-align: center; font-size: 20px; font-weight: 600; color: #1a1a2e; margin: 0; }
-
   /* === TYPOGRAPHY === */
   h1 { font-size: 28px; font-weight: 600; color: #1a1a2e; margin-bottom: 6px; }
   h2 { font-size: 20px; font-weight: 600; color: #1a1a2e; margin-bottom: 14px; text-align: center; }
@@ -109,8 +104,12 @@
   .player-num { width: 24px; height: 24px; border-radius: 8px; background: #f0f0f2; color: #2E2E32; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .player-name { flex: 1; font-weight: 500; }
   .player-remove { width: 32px; height: 32px; border: none; background: #fde8e8; color: #e24b4a; border-radius: 8px; font-size: 18px; cursor: pointer; line-height: 1; flex-shrink: 0; }
-  .team-assignment { background: #f8f8f8; border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; font-size: 14px; color: #1a1a2e; }
-  .team-assignment strong { color: #2E2E32; font-weight: 600; }
+
+  /* === LOTTERY GROUP STYLES === */
+  .lottery-group { background: #f8f8f8; border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; }
+  .lottery-group-title { font-size: 14px; font-weight: 600; color: #2E2E32; margin-bottom: 8px; }
+  .lottery-player { font-size: 14px; color: #555; padding: 6px 0; border-bottom: 1px solid #f0f0f0; }
+  .lottery-player:last-child { border-bottom: none; }
 </style>
 </head>
 <body>
@@ -140,6 +139,7 @@
           </g>
         </g>
         <circle cx="40" cy="4" r="1.2" fill="#C9A962"/>
+        <!-- красная завязка — одна дуга от края до края -->
         <path d="M18 33 Q40 49 62 33" fill="none" stroke="#E53935" stroke-width="1.5" stroke-linecap="round"/>
       </symbol>
     </defs>
@@ -162,21 +162,14 @@
 
   <!-- SETTINGS -->
   <div class="screen" id="s-settings">
-    <div class="screen-header">
-      <button class="back-btn" onclick="showMenu()">←</button>
-      <h2>Настройки</h2>
-      <div style="width:32px"></div>
-    </div>
+    <h2>Настройки</h2>
     <p class="sub">Звук и вибрация — скоро</p>
+    <button class="btn btn-outline" onclick="showMenu()">← Назад</button>
   </div>
 
   <!-- NEW GAME: STEP 1 — PLAYERS -->
   <div class="screen" id="s-setup-players">
-    <div class="screen-header">
-      <button class="back-btn" onclick="showMenu()">←</button>
-      <h2>Новая игра</h2>
-      <div style="width:32px"></div>
-    </div>
+    <h2>Новая игра</h2>
     <p class="section-label">Игроки</p>
     <div class="team-row">
       <input type="text" id="player-inp" placeholder="Имя игрока..." maxlength="20" />
@@ -194,17 +187,14 @@
         </div>
       </div>
       <button class="btn btn-hat" onclick="continueToOptions()" style="margin-top:1rem">Продолжить</button>
+      <button class="btn btn-outline" onclick="showMenu()">← Назад</button>
       <p class="err" id="players-err"></p>
     </div>
   </div>
 
   <!-- NEW GAME: STEP 2 — OPTIONS -->
   <div class="screen" id="s-setup-options">
-    <div class="screen-header">
-      <button class="back-btn" onclick="showSetupPlayers()">←</button>
-      <h2>Настройка игры</h2>
-      <div style="width:32px"></div>
-    </div>
+    <h2>Настройка игры</h2>
 
     <p class="section-label">Время на ход</p>
     <div class="timer-big" id="setup-timer-lbl">30 сек</div>
@@ -235,28 +225,24 @@
     <p class="sub" id="words-total-hint" style="margin-top:0"></p>
 
     <button class="btn btn-hat" onclick="startGame()">Начать игру</button>
+    <button class="btn btn-outline" onclick="showSetupPlayers()">← Назад</button>
     <p class="err" id="options-err"></p>
   </div>
 
   <!-- LOTTERY -->
   <div class="screen" id="s-lottery">
-    <div class="screen-header">
-      <button class="back-btn" onclick="resetAll()">←</button>
-      <h2>🎲 Жеребьёвка</h2>
-      <div style="width:32px"></div>
+    <div class="round-logo-wrap" style="padding-top:0;margin-bottom:0.5rem">
+      <svg class="logo-hat logo-hat--round" viewBox="0 0 80 52" aria-hidden="true"><use href="#nonla-logo"/></svg>
     </div>
-    <p class="sub" style="text-align:center">Порядок ходов в этом раунде:</p>
+    <h2>🎲 Жеребьёвка</h2>
+    <p class="sub" style="text-align:center">Порядок команд в этом раунде:</p>
     <div id="lottery-list"></div>
     <button class="btn btn-hat" onclick="showReady()" style="margin-top:1rem">Поехали!</button>
   </div>
 
   <!-- READY -->
   <div class="screen" id="s-ready">
-    <div class="screen-header" style="margin-bottom: 1rem;">
-      <button class="back-btn" onclick="showLottery()">←</button>
-      <span class="round-badge" id="ready-round-badge" style="margin: 0 auto;">Раунд 1</span>
-      <div style="width:32px"></div>
-    </div>
+    <div class="round-badge-wrap"><span class="round-badge" id="ready-round-badge">Раунд 1</span></div>
     <div class="team-badge" id="ready-team">Команда 1</div>
     <div class="round-hint" id="ready-hint"></div>
     <div class="round-logo-wrap">
@@ -269,11 +255,7 @@
 
   <!-- ROUND -->
   <div class="screen" id="s-round">
-    <div class="screen-header" style="margin-bottom: 1rem;">
-      <div style="width:32px"></div>
-      <span class="round-badge" id="round-badge" style="margin: 0 auto;">Раунд 1</span>
-      <div style="width:32px"></div>
-    </div>
+    <div class="round-badge-wrap"><span class="round-badge" id="round-badge">Раунд 1</span></div>
     <div class="team-badge" id="round-team">Команда 1</div>
     <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:100%"></div></div>
     <div class="timer-num" id="timer-disp">60</div>
@@ -290,11 +272,7 @@
 
   <!-- ROUND END -->
   <div class="screen" id="s-rend">
-    <div class="screen-header">
-      <div style="width:32px"></div>
-      <h2>Ход окончен!</h2>
-      <div style="width:32px"></div>
-    </div>
+    <h2>Ход окончен!</h2>
     <div class="score-grid">
       <div class="score-card"><div class="lbl">Угадано</div><div class="val" id="re-corr">0</div></div>
       <div class="score-card"><div class="lbl">В шляпе</div><div class="val" id="re-left">0</div></div>
@@ -306,14 +284,10 @@
 
   <!-- ROUND SUMMARY -->
   <div class="screen" id="s-rsummary">
-    <div class="screen-header">
-      <div style="width:32px"></div>
-      <h2 id="rsummary-title">Раунд завершён!</h2>
-      <div style="width:32px"></div>
-    </div>
     <div class="round-logo-wrap" style="padding-top:0">
       <svg class="logo-hat logo-hat--round" viewBox="0 0 80 52" aria-hidden="true"><use href="#nonla-logo"/></svg>
     </div>
+    <h2 id="rsummary-title">Раунд завершён!</h2>
     <p class="sub" style="text-align:center" id="rsummary-sub"></p>
     <div id="rsummary-scores"></div>
     <button class="btn btn-hat" onclick="startNextRound()" style="margin-top:1rem">Следующий раунд →</button>
@@ -321,12 +295,8 @@
 
   <!-- FINAL -->
   <div class="screen" id="s-final">
-    <div class="screen-header">
-      <div style="width:32px"></div>
-      <h2>Игра окончена!</h2>
-      <div style="width:32px"></div>
-    </div>
     <div style="font-size:56px;text-align:center;margin-bottom:1rem">🏆</div>
+    <h2>Игра окончена!</h2>
     <div id="final-scores"></div>
     <button class="btn btn-hat" onclick="resetAll()" style="margin-top:1.5rem">В главное меню</button>
   </div>
@@ -335,7 +305,7 @@
 
 <script>
 const ROUNDS = [
-  { num:1, name:'Раунд 1 — слова', badge:'r1', hint:'Объясняй своей команде, не используя однокоренные слова, мимику или жесты.' },
+  { num:1, name:'Раунд 1 — слова', badge:'r1', hint:'Объясняй словами, не называя само слово и однокоренные.' },
   { num:2, name:'Раунд 2 — жесты', badge:'r2', hint:'Только жесты и мимика. Нельзя говорить и указывать на предметы.' },
   { num:3, name:'Раунд 3 — одно слово', badge:'r3', hint:'На каждое слово — только одно слово-ассоциация. Больше ничего!' },
 ];
@@ -367,22 +337,22 @@ const WORD_PACKS = {
   basic: {
     name: 'Простые слова',
     desc: 'Для всех возрастов',
-    words: ["кот", "собака", "дом", "машина", "солнце", "река", "лес", "книга", "стол", "окно", "хлеб", "молоко", "школа", "парк", "мост", "цветок", "рыба", "птица", "снег", "дождь", "огонь", "вода", "земля", "небо", "луна", "звезда", "рука", "нога", "голова", "сердце", "глаз", "ухо", "нос", "рот", "зуб", "волос", "платье", "шапка", "ботинок", "часы", "телефон", "ключ", "дверь", "стул", "лампа", "зеркало", "картина", "музыка", "танец", "песня", "игра", "мяч", "корабль", "поезд", "самолёт", "велосипед", "дорога", "город", "деревня", "поле", "гора", "море", "остров", "пляж", "зима", "лето", "осень", "весна", "кухня", "окно", "забор", "двор", "сад", "цветок", "трава", "дерево", "лист", "ветка", "корень", "плод", "яблоко", "груша", "слива", "вишня", "банан", "апельсин", "лимон", "арбуз", "дыня", "виноград", "клубника", "малина", "черника", "огурец", "помидор", "морковь", "картошка", "лук", "чеснок", "капуста", "свёкла", "тыква", "перец", "горох", "фасоль", "кукуруза"]
+    words: ["кот", "собака", "дом", "машина", "солнце", "река", "лес", "книга", "стол", "окно", "хлеб", "молоко", "школа", "парк", "мост", "цветок", "рыба", "птица", "снег", "дождь", "огонь", "вода", "земля", "небо", "луна", "звезда", "рука", "нога", "голова", "сердце", "глаз", "ухо", "нос", "рот", "зуб", "волос", "платье", "шапка", "ботинок", "часы", "телефон", "ключ", "дверь", "стул", "лампа", "зеркало", "картина", "музыка", "танец", "песня", "игра", "мяч", "корабль", "поезд", "самолёт", "велосипед", "дорога", "город", "деревня", "поле", "гора", "море", "остров", "пляж", "зима", "лето", "осень", "весна", "кухня", "окно", "забор", "двор", "сад", "цветок", "трава", "дерево", "лист", "ветка", "корень", "плод", "яблоко", "груша", "слива", "вишня", "банан", "апельсин", "лимон", "арбуз", "дыня", "виноград", "клубника", "малина", "черника", "огурец", "помидор", "морковь", "картошка", "лук", "чеснок", "капуста", "свёкла", "тыква", "перец", "горох", "фасоль", "кукуруза", "хлеб", "пирог", "торт", "печенье", "конфета", "шоколад", "мороженое", "сок", "чай", "кофе", "молоко", "масло", "сыр", "яйцо", "мясо", "рыба", "суп", "каша", "салат", "котлета", "пицца", "блин", "варенье", "мёд", "сахар", "соль", "перец", "тарелка", "кружка", "ложка", "вилка", "нож", "кастрюля", "сковорода", "холодильник", "чайник", "плита", "микроволновка", "диван", "кресло", "кровать", "подушка", "одеяло", "шкаф", "полка", "ковёр", "шторы", "лестница", "лифт", "крыша", "труба", "стена", "пол", "потолок", "балкон", "гараж", "подвал", "чердак", "ванна", "душ", "туалет", "зеркало", "полотенце", "мыло", "шампунь", "щётка", "расчёска", "зубная паста", "духи", "крем", "ножницы", "иголка", "нитка", "пуговица", "молния", "карман", "рукав", "воротник", "пояс", "шарф", "перчатки", "носки", "колготки", "юбка", "брюки", "рубашка", "пальто", "куртка", "сапоги", "туфли", "кроссовки", "сандалии", "рюкзак", "сумка", "кошелёк", "зонт", "очки", "кольцо", "браслет", "серьги", "цепочка", "медаль", "значок", "флаг", "герб", "карта", "компас", "глобус", "атлас", "учебник", "тетрадь", "ручка", "карандаш", "линейка", "ластик", "циркуль", "краски", "кисть", "клей", "ножницы", "доска", "мел", "парта", "портфель", "урок", "класс", "учитель", "ученик", "директор", "звонок", "каникулы", "оценка", "диктант", "реферат", "экзамен", "диплом", "стадион", "бассейн", "каток", "горка", "качели", "песочница", "карусель", "батут", "велосипед", "самокат", "ролики", "лыжи", "коньки", "санки", "мяч", "обруч", "скакалка", "ракетка", "сетка", "ворота", "гол", "судья", "команда", "тренер", "чемпион", "приз", "медаль", "телевизор", "компьютер", "планшет", "мышка", "клавиатура", "наушники", "колонка", "камера", "фотоаппарат", "пульт", "розетка", "провод", "батарейка", "лампочка", "выключатель", "кнопка", "экран", "монитор", "принтер", "сканер", "флешка", "диск"]
   },
   medium: {
     name: 'Средние',
     desc: 'Обычный словарный запас',
-    words: ["аквариум", "архив", "афиша", "байкал", "балерина", "баскетбол", "батарея", "библиотека", "бинокль", "бланк", "болото", "бронза", "будильник", "буря", "бухгалтер", "вакцина", "валюта", "вентилятор", "вершина", "ветеринар", "виадук", "виза", "вирус", "витамин", "волейбол", "воробей", "воронка", "выставка", "галерея", "гардероб", "гармонь", "гектар", "гепард", "гербарий", "гитара", "гладиатор", "глетчер", "горизонт", "горилла", "горнолыжный", "госпиталь", "грамота", "гравюра", "графин", "гребля", "гренадер", "гриф", "губернатор", "гусеница", "декрет", "делегат", "детектив", "диаграмма", "диалект", "диван", "дирижёр", "дискотека", "дистанция", "дифтерит", "документ", "доминино", "дракон", "дровосек", "дюна", "ежевика", "ёмкость", "желудок", "жемчуг", "живопись", "журналист", "завод", "залив", "замок", "заповедник", "зебра", "зенит", "зефир", "зодиак", "золото", "зоология", "зубр"]
+    words: ["аквариум", "архив", "афиша", "байкал", "балерина", "баскетбол", "батарея", "библиотека", "бинокль", "бланк", "болото", "бронза", "будильник", "буря", "бухгалтер", "вакцина", "валюта", "вентилятор", "вершина", "ветеринар", "виадук", "виза", "вирус", "витамин", "волейбол", "воробей", "воронка", "выставка", "галерея", "гардероб", "гармонь", "гектар", "гепард", "гербарий", "гитара", "гладиатор", "глетчер", "горизонт", "горилла", "горнолыжный", "госпиталь", "грамота", "гравюра", "графин", "гребля", "гренадер", "гриф", "губернатор", "гусеница"]
   },
   hard: {
     name: 'Сложные',
     desc: 'Для эрудитов',
-    words: ["абберация", "абсолютизм", "авангардизм", "аватар", "аверс", "авиация", "авокадо", "автаркия", "автограф", "автократия", "агностик", "агрессия", "адаптация", "адвокатура", "аккумулятор", "акселерация", "актуализация", "аллитерация", "аллювий", "алогизм", "альтернатива", "амбивалентность", "амортизация", "амплитуда", "анабиоз", "анаграмма", "аналогия", "анатомия", "анахронизм", "анемия", "антагонизм", "антибиотик", "антипатия", "антисептик", "антитеза", "антология", "антропология"]
+    words: ["аберрация", "абсолютизм", "авангардизм", "аватар", "аверс", "авиация", "авокадо", "автаркия", "автограф", "автократия", "агностик", "агрессия", "адаптация", "адвокатура", "аккумулятор", "акселерация", "актуализация"]
   },
-  adult: {
-    name: '18+',
-    desc: 'Для взрослых',
-    words: ["виски", "водка", "коньяк", "шампанское", "пиво", "мартини", "ром", "теккила", "абсент", "джин", "текила", "чача", "самогон", "кальян", "сигара", "сигарета", "табак", "никотин", "алкоголь", "опьянение", "похмелье", "клубы", "бары", "ночные", "казино", "покер", "рулетка", "блэкджек", "карты", "кости", "ставки", " азартные игры", "казинополь", "круизный лайнер", "яхта", "сахарная вата", "попкорн", "шоколадная", "паб", "таверна", "ресторан", "кафе", "закуска", "закуски", "пиршество", "банкет", "фуршет", "бордель", "публичный дом", "проституция", "куртизанка", "интим", "свидание", "роман", "любовник", "любовница", "ревность", "супружеская", "измена", "предательство", "ложь", "обман", "долг", "кредит", "банк", "финансы", "инвестиции", "акции", "биржа", "инфляция", "безработица", "кризис", "экономический", "депрессия", "стресс", "тревога", "невроз", "психоз", "шизофрения", "депрессия", "суицид", "самоубийство", "смерть", "похороны", "кладбище", "гроб", "труп", "мумия", "скелет", "привидение", "дух", "призрак", "ведьма", "колдун", "магия", "чёрная магия", "заклинание", "проклятие", "сглаз", "порча", "амулет", "талисман", "оккультизм", "спиритизм", "астрология", "гороскоп", "карты таро", "хиромантия", "руны", "мантра", "медитация", "йога", "буддизм", "индуизм", "ислам", "христианство", "иудаизм", "язычество", "атеизм", "агностицизм", "деизм", "теизм", "пантеизм", "монотеизм", "политеизм", "священник", "епископ", "кардинал", "папа", "раввин", "имам", "монах", "монахиня", "инквизитор", "экзорцист", "святой", "чудо", "видение", "апокалипсис", "армагеддон", "рай", "ад", "чистилище", "кома", "заболевание", "болезнь", "недуг", "хворь", "хвораба", "недомогание", "недомогание", "лихорадка", "температура", "озноб", "потоотделение", "тошнота", "рвота", "понос", "запор", "боль", "боли", "мигрень", "ломота", "невралгия", "люмбаго", "радикулит", "остеохондроз", "остеопороз", "артроз", "артрит", "подагра", "анемия", "гемофилия", "лейкемия", "рак", "опухоль", "саркома", "меланома", "инсульт", "инфаркт", "гипертония", "гипотония", "тахикардия", "брадикардия", "аритмия", "порок", "кардиомиопатия", "кардионевроз", "стенокардия", "астма", "эмфизема", "пневмония", "туберкулёз", "коклюш", "дифтерия", "корь", "краснуха", "свинка", "ветрянка", "герпес", "простуда", "грипп", "ангина", "фарингит", "ларингит", "трахеит", "бронхит", "гастрит", "язва", "колит", "проктит", "геморрой", "трещина", "полип", "аппендицит", "холецистит", "панкреатит", "печень", "печеночная", "цирроз", "гепатит", "желтуха", "почки", "почечная", "нефрит", "пиелонефрит", "мочевой пузырь", "цистит", "уретрит", "простатит", "аденома", "импотенция", "фригидность", "фригидность", "анорексия", "булимия", "целиакия", "болезнь", "синдром", "болезнь альцгеймера", "болезнь паркинсона", "болезнь лайма", "болезнь крейцфельда-якоба", "сумасшедший", "сумасшествие", "психопат", "психопатия", "социопат", "нарцисс", "нарциссизм", "мазохист", "мазохизм", "садист", "садизм", "трансвестит", "трансвестизм", "педофил", "педофилия", "некрофил", "некрофилия", "копролалия", "фетишизм", "садизм", "мазохизм", "трансгендер", "трансгендеризм", "гендерная дисфория", "интерсекс", "асексуальность", "арогекс", "зоофилия", "натурализм", "нудизм", "инцест", "инцеотуальность", "проституция", "путана", "жрица", "девочка", "мальчик", "проститутка", "путана", "эскортница", "баба", "курва", "шлюха", "лярва", "крошка", "подружка", "красотка", "королева", "царица", "донна", "мадам", "мисс", "миссис", "госпожа", "сеньора", "синьора", "фройлейн", "мадемуазель", "фрау", "барышня", "дамочка", "женщина", "женщинка", "женщинища", "женск", "ключ", "замок", "трубка", "фигура", "куколка", "кукла", "кукленок", "кукляша", "кукляшка", "кукляшечка", "кукляшечка", "кукляшка", "кукляша", "кукляшка", "кукляшечка", "кукляшечка", "кукляшка", "кукляша"]
+  superhard: {
+    name: 'Супер сложные',
+    desc: 'Только для знатоков',
+    words: ["аберрантность", "абстрагирование", "автаркизация", "агнозия", "агностицизм", "аксиоматизация", "акцентологизм", "алеаторика", "алеаторность"]
   }
 };
 
@@ -391,7 +361,7 @@ let masterWords = [], bag = [], roundIdx = 0, turnIdx = 0;
 let roundTime = 30, timeLeft = 0, timerInterval = null;
 let roundCorrect = 0, order = [];
 let wordsPerPlayer = 5, selectedPack = 'basic', selectedPacks = ['basic'];
-let playerTeamAssignment = {};
+let playersByTeam = {};
 
 function showMenu() {
   document.getElementById('menu-err').textContent = '';
@@ -497,6 +467,7 @@ function initOptionsScreen() {
   ).join('');
 
   updateWordsHint();
+  // re-apply multi-select highlight
   document.querySelectorAll('#pack-list .pack-btn').forEach(btn => {
     btn.classList.toggle('selected', selectedPacks.includes(btn.dataset.pack));
   });
@@ -508,6 +479,14 @@ function updateSetupTimer(val) {
   roundTime = parseInt(val);
   const lbl = document.getElementById('setup-timer-lbl');
   lbl.textContent = roundTime >= 60 ? '1 мин' : roundTime + ' сек';
+}
+
+function setWordsPerPlayer(n) {
+  wordsPerPlayer = n;
+  document.querySelectorAll('#words-per-player-btns .stepper-btn').forEach(btn => {
+    btn.classList.toggle('selected', parseInt(btn.textContent) === n);
+  });
+  updateWordsHint();
 }
 
 function selectPack(id) {
@@ -532,16 +511,16 @@ function updateWordsHint() {
 
 function buildTeamsFromPlayers() {
   teams = [];
-  const teamNames = ['Синие', 'Красные'];
-  for (let i = 0; i < teamCount; i++) {
-    teams.push(teamNames[i] || 'Команда ' + (i + 1));
-  }
+  for (let i = 0; i < teamCount; i++) teams.push('Команда ' + (i + 1));
   
   // Распределить игроков по командам
-  playerTeamAssignment = {};
-  for (let i = 0; i < players.length; i++) {
-    playerTeamAssignment[players[i]] = teams[i % teams.length];
-  }
+  playersByTeam = {};
+  teams.forEach(t => { playersByTeam[t] = []; });
+  
+  players.forEach((player, idx) => {
+    const teamIdx = idx % teamCount;
+    playersByTeam[teams[teamIdx]].push(player);
+  });
 }
 
 function buildWordList() {
@@ -561,7 +540,7 @@ function saveProgress(screenId) {
   const data = {
     players, teamCount, teams, scores, roundScores, masterWords, bag,
     roundIdx, turnIdx, roundTime, timeLeft, roundCorrect, order,
-    wordsPerPlayer, selectedPack, screen: screenId, playerTeamAssignment
+    wordsPerPlayer, selectedPack, screen: screenId, playersByTeam
   };
   localStorage.setItem(SAVE_KEY, JSON.stringify(data));
 }
@@ -592,13 +571,13 @@ function loadGame() {
   order = data.order || [...teams];
   wordsPerPlayer = data.wordsPerPlayer || 5;
   selectedPack = data.selectedPack || 'basic';
-  playerTeamAssignment = data.playerTeamAssignment || {};
+  playersByTeam = data.playersByTeam || {};
   const screen = data.screen || 's-ready';
   if (screen === 's-round') {
     const r = ROUNDS[roundIdx];
     document.getElementById('round-badge').textContent = r.name;
     document.getElementById('round-badge').className = 'round-badge ' + r.badge;
-    document.getElementById('round-team').textContent = getPlayerDisplay(turnIdx);
+    document.getElementById('round-team').textContent = order[turnIdx];
     document.getElementById('r-correct').textContent = roundCorrect;
     updateTimer();
     showWord();
@@ -637,40 +616,34 @@ function startGame() {
 
 function startNewRound() {
   bag = [...masterWords].sort(() => Math.random() - 0.5);
-  order = [...players].sort(() => Math.random() - 0.5);
+  order = [...teams].sort(() => Math.random() - 0.5);
   turnIdx = 0;
   showLottery();
 }
 
 function showLottery() {
-  document.getElementById('lottery-list').innerHTML = order.map((playerName, i) => {
-    const team = playerTeamAssignment[playerName];
-    return `<div class="team-assignment">
-      <strong>${i + 1}. ${escapeHtml(playerName)}</strong> — ${team}
-    </div>`;
-  }).join('');
+  let html = '';
+  order.forEach((teamName, idx) => {
+    const players = playersByTeam[teamName] || [];
+    html += `<div class="lottery-group">
+      <div class="lottery-group-title">${idx + 1}. ${teamName}</div>`;
+    if (players.length > 0) {
+      html += players.map(p => `<div class="lottery-player">${escapeHtml(p)}</div>`).join('');
+    } else {
+      html += `<div class="lottery-player" style="color:#aaa">Нет игроков</div>`;
+    }
+    html += '</div>';
+  });
+  document.getElementById('lottery-list').innerHTML = html;
   show('s-lottery');
   saveProgress('s-lottery');
 }
 
-function getPlayerDisplay(idx) {
-  if (idx < order.length) {
-    return order[idx];
-  }
-  return order[0];
-}
-
-function getPlayerTeam(playerName) {
-  return playerTeamAssignment[playerName];
-}
-
 function showReady() {
   const r = ROUNDS[roundIdx];
-  const currentPlayer = getPlayerDisplay(turnIdx);
-  const currentTeam = getPlayerTeam(currentPlayer);
   document.getElementById('ready-round-badge').textContent = r.name;
   document.getElementById('ready-round-badge').className = 'round-badge ' + r.badge;
-  document.getElementById('ready-team').textContent = `${currentPlayer} (${currentTeam})`;
+  document.getElementById('ready-team').textContent = order[turnIdx];
   document.getElementById('ready-hint').textContent = r.hint;
   document.getElementById('ready-words-count').textContent = bag.length;
   show('s-ready');
@@ -680,11 +653,9 @@ function showReady() {
 function startRound() {
   roundCorrect = 0; timeLeft = roundTime;
   const r = ROUNDS[roundIdx];
-  const currentPlayer = getPlayerDisplay(turnIdx);
-  const currentTeam = getPlayerTeam(currentPlayer);
   document.getElementById('round-badge').textContent = r.name;
   document.getElementById('round-badge').className = 'round-badge ' + r.badge;
-  document.getElementById('round-team').textContent = `${currentPlayer} (${currentTeam})`;
+  document.getElementById('round-team').textContent = order[turnIdx];
   document.getElementById('r-correct').textContent = '0';
   updateTimer(); showWord();
   show('s-round');
@@ -714,12 +685,10 @@ function showWord() {
 function wordResult(ok) {
   if (!bag.length) return;
   const w = bag.shift();
-  const currentPlayer = getPlayerDisplay(turnIdx);
-  const currentTeam = getPlayerTeam(currentPlayer);
   if (ok) {
     roundCorrect++;
-    scores[currentTeam]++;
-    roundScores[roundIdx][currentTeam]++;
+    scores[order[turnIdx]]++;
+    roundScores[roundIdx][order[turnIdx]]++;
     document.getElementById('r-correct').textContent = roundCorrect;
   } else {
     bag.push(w);
@@ -790,7 +759,7 @@ function resetAll() {
   players = []; teams = []; teamCount = 2;
   scores = {}; roundScores = [{},{},{}];
   masterWords = []; bag = []; roundIdx = 0; turnIdx = 0;
-  playerTeamAssignment = {};
+  playersByTeam = {};
   showMenu();
 }
 
